@@ -36,17 +36,17 @@ void scaner()
 
 	ch = prog[p++];
 
-    while(ch == ' ' ){       //消除空格
-        ch = prog[p++];
-        col++;
+    while(ch == '\n' || ch == ' '){
+        if(ch == '\n'){
+            ch = prog[p++];
+            line++;
+            col = 1;
+        }
+        if(ch == ' ' ){       //消除空格
+            ch = prog[p++];
+            col++;
+        }
     }
-    
-    while(ch == '\n'){
-        ch = prog[p++];
-        line++;
-        col = 1;
-    }
-
 
     if((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')){
         m = 0;
