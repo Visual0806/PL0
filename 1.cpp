@@ -1,4 +1,4 @@
-/*      0                                                                                First集
+/*                                                                                      First集
 <prog> → program <id>；<block>                                                          First(prog) = { program }
 <block> → [<condecl>][<vardecl>][<proc>]<body>                                          First(block) = { const , var , procedure , begin }
 <condecl> → const <const>{,<const>};                                                    First(condecl) = { const }
