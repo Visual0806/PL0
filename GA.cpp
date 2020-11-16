@@ -13,7 +13,7 @@
                |<body>
                |read (<id>{，<id>})
                |write (<exp>{,<exp>})
-<lexp> → <exp> <lop> <exp>|odd <exp>                                                    First(lexp) = { + , - , l , d , ( ,odd }
+<lexp> → <exp> <lop> <exp>|odd <exp>                                                    First(lexp) = { + , - , l , d , ( , odd }
 <exp> → [+|-]<term>{<aop><term>}                                                        First(exp) = { + , - , l , d , ( }
 <term> → <factor>{<mop><factor>}                                                        First(term) = { l , d , ( }
 <factor>→<id>|<integer>|(<exp>)                                                         First(factor) = { l , d , ( }
@@ -48,294 +48,524 @@ class Word{
         void print();
 };
 
+fstream fp("GA_out.txt" , ios::out);
+fstream fp1("mid.txt" , ios::in);
 string token;
 Word word;
-int errorStack[100] = {-1};
-int *errorType = errorStack;
-bool error = false;
 
 void Word::print() {
-    cout << "-----------------" << endl;
-    cout << "Value: " << value << endl;
-    cout << "Key: " << key << endl;
-    cout << "Position: [" << line << "," << column << "]" << endl;
-    cout << "-----------------" << endl;
+    fp << "-----------------" << endl;
+    fp << "Value: " << value << endl;
+    fp << "Key: " << key << endl;
+    fp << "Position: [" << line << "," << column << "]" << endl;
+    fp << "-----------------" << endl;
 }
+
+void Prog();
+void Block();
+void Condecl();
+void Vardecl();
+void Proc();
+void Body();
+void Statement();
+void Exp();
+void Lexp();
+void Term();
+void Factor();
 
 void readline()
 {
-	fstream fp("mid.txt" , ios::in);
-
-    if(getline(fp, token)){
+    if(getline(fp1, token)){
         istringstream iss(token);
         iss >> word.value >> word.key >> word.line >> word.column;
     }
-
-    fp.close();
 }
 
 void Error(int type)
 {
     switch(type){
         case 0:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'program'" << endl;
+            break;
         case 1:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <id>" << endl;
+            break;
+        case 2:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing ';'" << endl;
+            break;
+        case 3:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <body>" << endl;
+            break;
+        case 4:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing ':='" << endl;
+            break;
+        case 5:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <integer>" << endl;
+            break;
+        case 6:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing ','" << endl;
+            break;
+        case 7:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing '('" << endl;
+            break;
+        case 8:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing ')'" << endl;
+            break;
+        case 9:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'end'" << endl;
+            break;
+        case 10:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'then'" << endl;
+            break;
+        case 11:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'do'" << endl;
+            break;
+        case 12:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <exp>" << endl;
+            break;
+        case 13:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <Statement>" << endl;
+            break;
+        case 14:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <lexp>" << endl;
+            break;
+        case 15:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <lop>" << endl;
+            break;
+        case 16:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing <factor>" << endl;
+            break;
+        case 17:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'procedure'" << endl;
+            break;
+        case 18:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'const'" << endl;
+            break;
+        case 19:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'var'" << endl;
+            break;
+        case 20:
+            fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'begin'" << endl;
+            break;
     }
 
 }
 
+//<prog> → program <id>；<block>                                                          First(prog) = { program }
 void Prog()
 {
     readline();
-    if(word.value == "program" || *errorType == 0){
-        if(*errorType == 0) 
-            errorType++;
+    if(word.value == "program"){
         readline();
-        if(word.key == "identifier" || *errorType == 1){
-            if(*errorType == 1) 
-                errorType++; 
-            else 
+        if(word.key == "identifier"){
+            readline();
+            if(word.value == ";"){
                 readline();
-            if(word.value == ";" || *errorType == 2){
-                if(*errorType == 2 && word.value != ";") 
-                    errorType++; 
-                else 
-                    readline();
                 Block();
             } 
             else
-                Error(2);
+                Error(2);   //Missing ';'
         } 
         else
-            Error(1);
+            Error(1);   //Missing <id>
     } 
     else
-        Error(0);
+        Error(0);   //Missing 'program'
 }
 
+//<block> → [<condecl>][<vardecl>][<proc>]<body>                                          First(block) = { const , var , procedure , begin }
 void Block()
 {
-    if(word.value == "const" && !error){
-        readline();
+    if(word.value == "const"){
         Condecl();
     } 
-    // else if(word.key == "identifier" && *errorType != 8 && !error){
-    //     Error(8);
-    //     while(word.key != "EOP" && word.key != "RESERVED"){
-    //         readline();
-    //     }
-    //     readline();
-    // } 
-    // else if(*errorType == 8 && !error) {
-    //     errorType++;
-    //     while(word.key != "EOP" && word.key != "RESERVED"){
-    //         readline();
-    //     }
-    //     readline();
-    // }
 
-    if(word.value == "var" && !error){
-        readline();
+    if(word.value == "var"){
         Vardecl();
     } 
-    // else if(word.key == "ID" && *errorType != 8 && !error){
-    //     Error(8); // Cannot resolve type
-    //     while(word.key != "EOP" && word.key != "RESERVED"){
-    //         readline();
-    //     }
-    //     readline();
-    // } 
-    // else if(*errorType == 8 && !error) {
-    //     errorType++;
-    //     while(word.key != "EOP" && word.key != "RESERVED"){
-    //         readline();
-    //     }
-    //     readline();
-    // }
 
-    if(word.value == "procedure" && !error){
-        readline();
+    if(word.value == "procedure"){
         Proc();
     }
-    // else if(word.key == "ID" && *errorType != 8 && !error){
-    //     Error(8); // Cannot resolve type
-    //     while(word.key != "EOP" && word.key != "RESERVED"){
-    //         readline();
-    //     }
-    //     readline();
-    // }
-    // else if(*errorType == 8 && !error) {
-    //     errorType++;
-    //     while(word.key != "EOP" && word.key != "RESERVED"){
-    //         readline();
-    //     }
-    //     readline();
-    // }
 
-    if(!error){
+    if(word.value == "begin"){
         Body();
+    }
+    else{
+        Error(3);   //Missing <body>
     }
 }
 
+//<condecl> → const <const>{,<const>};                                                    First(condecl) = { const }
 void Condecl()
 {
-    if(word.value == "identifier"  || *errorType == 3){
-        if(word.key != "identifier") 
-            errorType++;
+    if(word.value == "const"){
         readline();
-        if(word.value == ":=" || *errorType == 4){
-            if(word.value != ":=") 
-                errorType++; 
-            else 
+        if(word.key == "identifier"){
+            readline();
+            if(word.value == ":="){
                 readline();
-
-            if(word.key == "constant" || *errorType == 5){
-                // if(word.key != "constant" && *errorType == 5){
-                //     errorType++;
-                //     while(word.value != "," && word.value != ";"){
-                //         readline();
-                //         if(word.key == "identifier") 
-                //             break;
-                //     }
-                // } 
-                // else 
-                //     readline();
-
-                while(word.value == "," || *errorType == 27){
-                    if(*errorType == 27 && word.value != ",") 
-                        errorType++; 
-                    else 
+                if(word.key == "constant"){
+                    readline();
+                    while(word.value == ","){
                         readline();
-
-                    if(word.key == "identifier"|| *errorType == 3){
-                        if(word.key != "identifier") 
-                            errorType++; 
-                        else 
+                        if(word.key == "identifier"){
                             readline();
-
-                        if(word.value == ":=" || *errorType == 4){
-                            if(word.value != ":=") 
-                                errorType++; 
-                            else 
+                            if(word.value == ":="){
                                 readline();
-
-                            if(word.key == "constant" || *errorType == 5){
-                                if(word.key != "constant"){
-                                    errorType++;
-                                    while(word.value != "," && word.key != ";"){
-                                        readline();
-                                    }
-                                } 
-                                else
+                                if(word.key == "constant"){
                                     readline();
+                                }
+                                else
+                                    Error(5);   //Missing <integer>
                             } 
-                            else
-                                Error(5); // Missing INT
+                            else 
+                                Error(4);   //Missing ':='
                         } 
-                        else 
-                            Error(4); // Missing AOP
-                    } 
-                    else
-                        Error(3); // Missing id
-                    if(error) 
-                        break;
-                }
+                        else
+                            Error(1);   //Missing <id>
+                    }
 
-                // if(word.key == "ID" && !error) 
-                //     Error(27);// Missing comma
-                
-                // while (word.value == ",") 
-                //     readline();
-
-                if (word.value == ";" || *errorType == 2 || error){
-                    if(word.value != ";" && !error) 
-                        errorType++; 
-                    else 
+                    if(word.value == ";")
                         readline();
-                
+                    else 
+                        Error(2);   //Missing ';'
                 } 
                 else 
-                    Error(2); // Missing EOP
+                    Error(5);   //Missing <integer>
             } 
-            else 
-                Error(5); // Missing INT
+            else
+                Error(4);   //Missing ':='
         } 
         else
-            Error(4); // Missing AOP
-    } 
+            Error(1);   //Missing <id>
+    }
     else
-        Error(3); // Missing id
+        Error(18);  //Missing 'const'
 }
 
+//<vardecl> → var <id>{,<id>};                                                            First(vardecl) = { var }
 void Vardecl()
+{
+    if(word.value == "var"){
+        readline();
+        if(word.key == "identifier"){
+            readline();
+            while(word.value == ","){
+                readline();
+                if (word.key == "identifier"){
+                    readline();
+                } 
+                else
+                    Error(1);   //Missing <id>
+            }
+
+            if(word.key == "identifier")
+                Error(6);   //Missing ','
+
+            if(word.value == ";"){
+                readline();
+            } 
+            else 
+                Error(2);   //Missing ';'
+        } 
+        else
+            Error(1);   //Missing <id>
+    }
+    else
+        Error(19);  //Missing 'var'
+}
+
+//<proc> → procedure <id>（[<id>{,<id>}]）;<block>{;<proc>}                               First(proc) = { procedure }
+void Proc()
+{   
+    if(word.value == "procedure"){
+        readline();
+        if(word.key == "identifier"){
+            readline();
+            if(word.value == "("){
+                readline();
+                if(word.key == "identifier"){
+                    readline();
+                    while(word.value == ","){
+                        readline();
+                        if(word.key == "identifier")
+                            readline();
+                        else    
+                            Error(1);   //Missing <id>
+                    }
+
+                    if(word.key == "identifier")
+                        Error(6);   //Missing ','                   
+                }
+
+                if(word.value == ")"){
+                    readline();
+                    if(word.value == ";"){
+                        readline();
+                        Block();
+
+                        while(word.value == ";"){
+                            readline();
+                            Proc();
+                        }
+                    }
+                    else    
+                        Error(2);   //Missing ';'
+                }
+                else    
+                    Error(8);   //Missing ')'
+            }
+            else
+                Error(7);   //Missing '('
+        }
+        else
+            Error(1);   //Missing <id>
+    }
+    else
+        Error(17);  //Missing 'procedure'
+
+}
+
+//<body> → begin <statement>{;<statement>}end                                             First(body) = { begin }
+void Body()
+{
+    if(word.value == "begin"){
+        readline();
+        Statement();
+        while(word.value == ";"){
+            readline();
+            Statement();
+        }
+
+        if(word.value == "end"){
+            readline();
+        }
+        else 
+            Error(9);   //Missing 'end'
+    }
+    else
+        Error(20);  //Missing 'begin'
+}
+
+// <statement> → <id> := <exp>                                                             First(statement) = { l , if , while , call , begin , read , write }
+//                |if <lexp> then <statement>[else <statement>]
+//                |while <lexp> do <statement>
+//                |call <id>（[<exp>{,<exp>}]）
+//                |<body>
+//                |read (<id>{，<id>})
+//                |write (<exp>{,<exp>})
+void Statement()
 {
     if(word.key == "identifier"){
         readline();
-
-        while(word.value == "," || *errorType == 26){
-            if(*errorType == 26 && word.value != ",") 
-                errorType++; 
-            else 
-                readline();
-
-            if (word.key == "identifier"){
-                readline();
-            } 
-            else
-                Error(7);// Missing ID
+        if(word.value == ":="){
+            readline();
+            Exp();
         }
+        else
+            Error(4);   //Missing ':='
+    }
 
-        if(word.key == "identifier")
-            Error(26);
-
-        if (word.value == ";" || *errorType == 2){
-            if (*errorType == 2 && word.value != ";") 
-                errorType++;
-            else 
+    else if(word.value == "if"){
+        readline();
+        Lexp();
+        if(word.value == "then"){
+            readline();
+            Statement();
+            if(word.value == "else"){
                 readline();
-        } 
-        else 
-            Error(2); // Missing EOP
-    } 
+                Statement();
+            }
+        }
+        else
+            Error(10);  //Missing 'then'
+    }
+    
+    else if(word.value == "while"){
+        readline();
+        Lexp();
+        if(word.value == "do"){
+            readline();
+            Statement();
+        }
+        else    
+            Error(11);  //Missing 'do'
+    }
+
+    else if(word.value == "call"){
+        readline();
+        if(word.key == "identifier"){
+            readline();
+            if(word.value == "("){
+                readline();
+                if(word.value == "+" || word.value == "-" || word.key == "identifier" || word.key == "constant" || word.value == "("){
+                    Exp();
+
+                    while(word.value == ","){
+                        readline();
+                        if(word.value == "+" || word.value == "-" || word.key == "identifier" || word.key == "constant" || word.value == "(")
+                            Exp();
+                        else
+                            Error(12);  //Missing <exp>
+                    }                   
+                }
+                
+                if(word.value == ")")
+                    readline();
+                else
+                    Error(8);   //Missing ')'
+            }
+            else
+                Error(7);   //Missing '('
+        }
+        else
+            Error(1);   //Missing <id>
+    }
+
+    else if(word.value == "begin"){
+        Body();
+    }
+
+    else if(word.value == "read"){
+        readline();
+        if(word.value == "("){
+            readline();
+            if(word.key == "identifier"){
+                readline();
+                while(word.value == ","){
+                    readline();
+                    if(word.key == "identifier"){
+                        readline();
+                    }
+                    else
+                        Error(1);   //Missing <id>  
+                }
+
+                if(word.key == "identifier"){
+                    Error(6);   //Missing ','
+                }
+
+                if(word.value == ")"){
+                    readline();
+                }
+                else
+                    Error(8);   //Missing ')'
+            }
+            else
+                Error(1);   //Missing <id>  
+        }
+        else
+            Error(7);   //Missing '('
+    }
+
+    else if(word.value == "write"){
+        readline();
+        if(word.value == "("){
+            readline();
+            Exp();
+            while(word.value == ","){
+                readline();
+                Exp();
+            }
+
+            if(word.value == "+" || word.value == "-" || word.key == "identifier" || word.key == "constant" || word.value == "("){
+                Error(6);   //Missing ','
+            }
+
+            if(word.value == ")"){
+                readline();
+            }
+            else
+                Error(8);   //Missing ')'
+        }
+        else
+            Error(7);   //Missing '('
+    }
+
     else
-        Error(6); // Missing ID
+        Error(13);  //Missing <statement>
 }
 
-void Proc()
-{
-
-}
-
-void Body()
-{
-
-}
-
-void Statement()
-{
-
-}
-
+//<lexp> → <exp> <lop> <exp>|odd <exp>                                                    First(lexp) = { + , - , l , d , ( , odd }
+//<lop> → =|<>|<|<=|>|>=
 void Lexp()
 {
+    if(word.value == "+" || word.value == "-" || word.key == "identifier" || word.key == "constant" || word.value == "("){
+        Exp();
+        if(word.value == "=" || word.value == "<>" || word.value == "<" || word.value == "<=" || word.value == ">" || word.value == ">="){
+            readline();
+            Exp();
+        }
+        else
+            Error(15);  //Missing <lop>
+    }
+
+    else if(word.value == "odd"){
+        readline();
+        Exp();
+    }
+
+    else
+        Error(14);  //Missing <lexp>
 
 }
 
+//<exp> → [+|-]<term>{<aop><term>}                                                        First(exp) = { + , - , l , d , ( }
+//<aop> → +|-            
 void Exp()
 {
+    if(word.value == "+" || word.value == "-"){
+        readline();
+    }
 
+    Term();
+
+    while(word.value == "+" || word.value == "-"){
+        readline();
+        Term();
+    }
 }
 
+//<term> → <factor>{<mop><factor>}                                                        First(term) = { l , d , ( }
+//<mop> → *|/ 
 void Term()
 {
+    Factor();
+    while(word.value == "*" || word.value == "/"){
+        readline();
+        Factor();
+    }
 
 }
 
+//<factor>→<id>|<integer>|(<exp>)                                                         First(factor) = { l , d , ( }
 void Factor()
 {
+    if(word.key == "identifier"){
+        readline();
+    }
 
+    else if(word.key == "constant"){
+        readline();
+    }
+
+    else if(word.value == "("){
+        Exp();
+        if(word.value == ")"){
+            readline;
+        }
+        else
+            Error(8);   //Missing ')'
+    }
+
+    else
+        Error(16);  //Missing <factor>;
 }
 
 int main()
 {
-    readline();
+    Prog();
+    fp.close();
+    fp1.close();
 }

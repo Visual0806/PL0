@@ -1,26 +1,34 @@
-var m,n,r,q;
-procedure gcd;
-begin;
-while r<=0 do
+program lry;
+const a:=500;
+var m, n, r, q;
+    procedure gcd(c);
+    var a,m;
+        procedure abc(d,e);
+        var a,m;
+        begin
+        a :=1;
+        a :=a+1;
+        write(a);
+        write(d);
+        write(e)
+        end;
+    begin
+    a:=5;
+    while a=4+5*1-2*2 do a:=a+3*5;
+    call abc(c,a)
+    end;
+
+    procedure gcdaa();
+    var a;
+    begin
+    q := 1+2
+    end
 begin
-q := m / n;
-r := m - q * n;
-m := n;
-n := r;
-end;
-end;
-begin
-read(m);
 read(n);
-if m < n then
+read(m);
+if odd n then
 begin
-r := m;
-m := n;
-n := r;
-end;
-begin
-r:=1;
-call gcd;
+call gcd(n);
 write(m);
-end;
-end#
+end
+end

@@ -13,7 +13,7 @@
                |<body>
                |read (<id>{，<id>})
                |write (<exp>{,<exp>})
-<lexp> → <exp> <lop> <exp>|odd <exp>                                                    First(lexp) = { + , - , l , d , ( ,odd }
+<lexp> → <exp> <lop> <exp>|odd <exp>                                                    First(lexp) = { + , - , l , d , ( , odd }
 <exp> → [+|-]<term>{<aop><term>}                                                        First(exp) = { + , - , l , d , ( }
 <term> → <factor>{<mop><factor>}                                                        First(term) = { l , d , ( }
 <factor>→<id>|<integer>|(<exp>)                                                         First(factor) = { l , d , ( }
