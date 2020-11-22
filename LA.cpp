@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <windows.h>
 
 using namespace std;
 
@@ -240,13 +239,13 @@ int main()
                 fp << token << " delimiter " << line << " " << col - length << endl; 
                 break;
             case 6:
-                fp <<"Waring line:" << line << " col:" << col - length << " ':'without'='" << endl;
+                fp <<"Warning line:" << line << " col:" << col - length << " ':'without'='" << endl;
                 break;
             case 7:
-                fp <<"Waring line:" << line << " col:" << col - length << " string start with number" << endl;
+                fp <<"Warning line:" << line << " col:" << col - length << " string start with number" << endl;
                 break;
             case 8:
-                fp <<"Waring:" << line << "行" << col - length << "列" << "非法字符" << endl;
+                fp <<"Warning:" << line << "行" << col - length << "列" << "非法字符" << endl;
                 break;
         }
         

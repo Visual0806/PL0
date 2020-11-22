@@ -11,10 +11,10 @@ var m, n, r, q;
         write(a);
         write(d);
         write(e)
-        end;
+        end
     begin
     a:=5;
-    while a=4+5*1-2*2 do a:=a+3*5;
+    while a=4+5*1-2*2  a:=a+3*5;
     call abc(c,a)
     end;
 
@@ -27,8 +27,8 @@ begin
 read(n);
 read(m);
 if odd n then
-begin
-call gcd(n);
-write(m);
-end
+    begin
+    call gcd(n;
+    write(m)
+    end
 end

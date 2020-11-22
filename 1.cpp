@@ -1,10 +1,10 @@
-/*      0                                                                                First集
-<prog> → program <id>；<block>                                                          First(prog) = { program }
+/*                                                                                      First集
+<prog> → program <id>;<block>                                                           First(prog) = { program }
 <block> → [<condecl>][<vardecl>][<proc>]<body>                                          First(block) = { const , var , procedure , begin }
 <condecl> → const <const>{,<const>};                                                    First(condecl) = { const }
 <const> → <id>:=<integer>                                                               First(const) = { l }
 <vardecl> → var <id>{,<id>};                                                            First(vardecl) = { var }
-<proc> → procedure <id>（[<id>{,<id>}]）;<block>{;<proc>}                               First(proc) = { procedure }
+<proc> → procedure <id>([<id>{,<id>}]);<block>{;<proc>}                                 First(proc) = { procedure }
 <body> → begin <statement>{;<statement>}end                                             First(body) = { begin }
 <statement> → <id> := <exp>                                                             First(statement) = { l , if , while , call , begin , read , write }
                |if <lexp> then <statement>[else <statement>]
@@ -20,7 +20,7 @@
 <lop> → =|<>|<|<=|>|>=                                                                  First(lop) = { = , < , > }
 <aop> → +|-                                                                             First(aop) = { + , - }
 <mop> → *|/                                                                             First(mop) = { * , / }
-<id> → l{l|d}   （注：l表示字母）                                                        First(id) = { l }
+<id> → l{l|d}   (注：l表示字母)                                                          First(id) = { l }
 <integer> → d{d}                                                                        First(integer) = { d }
 注释：
 <prog>：程序 ；<block>：块、程序体 ；<condecl>：常量说明 ；<const>：常量；

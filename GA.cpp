@@ -4,7 +4,7 @@
 <condecl> → const <const>{,<const>};                                                    First(condecl) = { const }
 <const> → <id>:=<integer>                                                               First(const) = { l }
 <vardecl> → var <id>{,<id>};                                                            First(vardecl) = { var }
-<proc> → procedure <id>（[<id>{,<id>}]）;<block>{;<proc>}                               First(proc) = { procedure }
+<proc> → procedure <id>([<id>{,<id>}]);<block>{;<proc>}                                 First(proc) = { procedure }
 <body> → begin <statement>{;<statement>}end                                             First(body) = { begin }
 <statement> → <id> := <exp>                                                             First(statement) = { l , if , while , call , begin , read , write }
                |if <lexp> then <statement>[else <statement>]
@@ -20,7 +20,7 @@
 <lop> → =|<>|<|<=|>|>=                                                                  First(lop) = { = , < , > }
 <aop> → +|-                                                                             First(aop) = { + , - }
 <mop> → *|/                                                                             First(mop) = { * , / }
-<id> → l{l|d}   （注：l表示字母）                                                        First(id) = { l }
+<id> → l{l|d}   (注：l表示字母)                                                          First(id) = { l }
 <integer> → d{d}                                                                        First(integer) = { d }
 注释：
 <prog>：程序 ；<block>：块、程序体 ；<condecl>：常量说明 ；<const>：常量；
@@ -148,10 +148,9 @@ void Error(int type)
             fp << "[Grammar ERROR] " << " [" << word.line << "," << word.column << "] " << "Missing 'begin'" << endl;
             break;
     }
-
 }
 
-//<prog> → program <id>；<block>                                                          First(prog) = { program }
+//<prog> → program <id>;<block>                                                          First(prog) = { program }
 void Prog()
 {
     readline();
@@ -163,11 +162,22 @@ void Prog()
                 readline();
                 Block();
             } 
-            else
+            else{
                 Error(2);   //Missing ';'
+                Block();
+            }
         } 
-        else
+        else{
             Error(1);   //Missing <id>
+            if(word.value == ";"){
+                readline();
+                Block();
+            } 
+            else{
+                Error(2);   //Missing ';'
+                Block();
+            }
+        }
     } 
     else
         Error(0);   //Missing 'program'
@@ -188,12 +198,7 @@ void Block()
         Proc();
     }
 
-    if(word.value == "begin"){
-        Body();
-    }
-    else{
-        Error(3);   //Missing <body>
-    }
+    Body();
 }
 
 //<condecl> → const <const>{,<const>};                                                    First(condecl) = { const }
@@ -219,11 +224,34 @@ void Condecl()
                                 else
                                     Error(5);   //Missing <integer>
                             } 
-                            else 
+                            else{
                                 Error(4);   //Missing ':='
+                                if(word.key == "constant"){
+                                    readline();
+                                }
+                                else
+                                    Error(5);   //Missing <integer>
+                            }
                         } 
-                        else
+                        else{
                             Error(1);   //Missing <id>
+                            if(word.value == ":="){
+                                readline();
+                                if(word.key == "constant"){
+                                    readline();
+                                }
+                                else
+                                    Error(5);   //Missing <integer>
+                            } 
+                            else{
+                                Error(4);   //Missing ':='
+                                if(word.key == "constant"){
+                                    readline();
+                                }
+                                else
+                                    Error(5);   //Missing <integer>
+                            }
+                        }
                     }
 
                     if(word.value == ";")
@@ -363,8 +391,10 @@ void Statement()
             readline();
             Exp();
         }
-        else
+        else{
             Error(4);   //Missing ':='
+            Exp();
+        }
     }
 
     else if(word.value == "if"){
@@ -378,8 +408,14 @@ void Statement()
                 Statement();
             }
         }
-        else
+        else{
             Error(10);  //Missing 'then'
+            Statement();
+            if(word.value == "else"){
+                readline();
+                Statement();
+            }
+        }
     }
     
     else if(word.value == "while"){
@@ -389,8 +425,10 @@ void Statement()
             readline();
             Statement();
         }
-        else    
+        else{    
             Error(11);  //Missing 'do'
+            Statement();
+        }
     }
 
     else if(word.value == "call"){

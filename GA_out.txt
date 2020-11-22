@@ -1,2 +1,3 @@
-[Grammar ERROR]  [15,5] Missing 'procedure'
-[Grammar ERROR]  [33,1] Missing <Statement>
+[Grammar ERROR]  [17,24] Missing 'do'
+[Grammar ERROR]  [31,15] Missing ')'
+[Grammar ERROR]  [34,1] Missing 'end'
