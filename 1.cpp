@@ -1,5 +1,9 @@
 /*                                                                                      First集
+<<<<<<< HEAD
 <prog> → program <id>;<block>                                                           First(prog) = { program }
+=======
+<prog> → program <id>；<block>                                                          First(prog) = { program }
+>>>>>>> 03f9a0b9e155801c46cf372b2f94162dbecbc43c
 <block> → [<condecl>][<vardecl>][<proc>]<body>                                          First(block) = { const , var , procedure , begin }
 <condecl> → const <const>{,<const>};                                                    First(condecl) = { const }
 <const> → <id>:=<integer>                                                               First(const) = { l }
