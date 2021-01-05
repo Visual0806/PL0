@@ -4,7 +4,7 @@
 
 using namespace std;
 
-char *prog;         //存储源代码字符串
+string prog;         //存储源代码字符串
 char token[10];     //接收关键字，变量，运算符和界符
 char ch;
 int no;            //各单词符号对应的数字
@@ -15,16 +15,15 @@ string table[14] = {"program","begin","if","then","while","do","end","const","va
 
 void read()         //读取源代码
 {
-	FILE *fp;
-	fp = fopen("code.txt", "r");
-	fseek(fp, 0, SEEK_END);
-	int file_size;
-	file_size = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-	prog = (char *)malloc(file_size * sizeof(char));
-	fread(prog, file_size, sizeof(char), fp);
-	//关闭文件流
-	fclose(fp);
+    string word;
+    fstream fp("code.txt" , ios::in);
+    while(1){
+        getline(fp,word);
+        if(word=="#")
+            break;
+        prog+=word;
+        prog+="\n";
+    }
 }
 
 void scaner()
@@ -218,7 +217,7 @@ int main()
 {
     read();
 
-	fstream fp("mid.txt" , ios::out);
+	fstream fp("LA_out.txt" , ios::out);
 
     while(prog[p] != '\0'){
         scaner();

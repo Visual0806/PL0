@@ -1,0 +1,25 @@
+program P;
+var a,x;
+    procedure Q(b);
+    var i;
+        procedure R(u,v);
+        var c,d;
+        begin
+        if u = 1 then call R(u+1,v)
+        else
+        v:=(a+c)*(b-d)
+        end
+    begin
+    call R(1,x)
+    end;
+
+    procedure S();
+    var c,i;
+    begin
+    c:=1;
+    call Q(c)
+    end
+begin
+call S()
+end
+#
